@@ -2,11 +2,16 @@ console.log('je suis dans le produit');
 //récupéer l'ID présent 
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');
+const colorSelect = document.getElementById("colors");
+const quantitySelect = document.getElementById("quantity");
+const addToCartBtn = document.getElementById("addToCart");
+addToCartBtn.addEventListener("click", onAddToCart);
+let product;
 
 getProduct()
-    .then(function (product) {
-        displayProduct(product)
-        colorProduct(product)
+    .then(function (productFromApi) {
+    product = productFromApi;
+        displayProduct()
     })
 
 //récupérer le produit sélectionné
@@ -29,7 +34,7 @@ function getProduct() {
 }
 
 //mettre les infos au bon endroit dans le html
-function displayProduct(product) {
+function displayProduct() {
     console.log(product);
 
     const title = document.getElementById("title");
@@ -46,28 +51,43 @@ function displayProduct(product) {
     image.alt = `${product.altTxt}`;
 
     const colors = document.getElementById("colors");
-    for (const color of product.colors){
+    for (const color of product.colors) {
         const option = document.createElement("option");
         option.textContent = color;
         option.value = color;
         colors.appendChild(option);
     }
-    colors.addEventListener('change',onColorChange);
+    colors.addEventListener('change', onColorChange);
 
     const quantity = document.getElementById("quantity");
-    quantity.addEventListener('change',onQuantityChange);
+    quantity.addEventListener('change', onQuantityChange);
 }
-
 
 //gérer les évenements de sélection de couleur
 function onColorChange(event) {
     console.log(event);
-    
+
 }
 //gérer les évenements de quantité
 function onQuantityChange(event) {
     console.log(event);
 }
 
-
 //gérer l'évenement d'ajout de panier
+function onAddToCart(event) {
+    if (!localStorage.getItem("basket")) {
+        localStorage.setItem("basket", JSON.stringify([]));
+    }
+    const basketLocalStorage = JSON.parse(localStorage.getItem("basket"));
+    if (basketLocalStorage.length) {
+        console.log("le tableau est plein");
+    } else {
+        console.log("le tableau est vide");
+        basketLocalStorage.push({
+         quantity:1,
+         color:"vert",
+         ...product
+        });
+    }
+    localStorage.setItem("basket", JSON.stringify(basketLocalStorage));
+}
