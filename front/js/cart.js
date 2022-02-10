@@ -28,7 +28,13 @@ function displayBasket() {
 
         h2.innerText = product.name;
         pColor.innerText = product.selectedColor;
-        pPrice.innerText = product.price;
+        pPrice.innerText = (product.price + " " + "€");
+        img.src = product.imageUrl;
+        img.alt = product.description;
+        divImg.alt = product.description;
+
+        article.style.display = 'inline';
+        img.style.width = '40%';
 
         cartSection.appendChild(article);
     }
