@@ -7,7 +7,6 @@ const basketLocalStorage = JSON.parse(localStorage.getItem("basket"));
 function displayBasket() {
   const cartSection = document.getElementById("cart__items");
   for (const product of basketLocalStorage) {
-    // demander à Karim quelle méthode ?
     const article = document.createElement("article");
     const divImg = document.createElement("div");
     const img = document.createElement("img");
@@ -42,7 +41,7 @@ function displayBasket() {
     pPrice.innerText = (product.price + " " + "€");
     img.src = product.imageUrl;
     img.alt = product.description;
-    pQuantity.innerText = product.selectedQuantity;
+    pQuantity.innerText = "Qté :";
     inputQuantity.value = product.selectedQuantity;
     inputQuantity.name = "itemQuantity";
     inputQuantity.type = "number";
@@ -68,27 +67,36 @@ function displayBasket() {
 displayBasket()
 
 //création de l'événement pour changer la quantité
-function changeQuantity(event) {
-  product.selectedQuantity = parseInt(event.target.value);
-  const quantity = document.getElementById("itemQuantity");
-  quantity.addEventListener('change', changeQuantity);
-  alert("test");
-  if (value.selectedQuantity != basketLocalStorage.selectedQuantity) {
-    basketLocalStorage.push(value);
+// function changeQuantity(event) {
+//   product.selectedQuantity = parseInt(event.target.value);
+//   const quantity = document.getElementById("itemQuantity");
+//   quantity.addEventListener('change', changeQuantity);
+//   alert("test");
+//   if (value.selectedQuantity != basketLocalStorage.selectedQuantity) {
+//     basketLocalStorage.push(value);
 
-  }
+//   }
 
-}
+// }
 
 //evenement de suppression du produit
-
+// const deleteSelection = document.getElementsByClassName("deleteItem");
+// function deleteArticle (event) {
+// const deleteArticle = deleteSelection.closest("article");
+// deleteSelection.addEventListener('click', deleteArticle);
+//   if (condition) {
+    
+//   } else {
+    
+//   }
+// }
 
 
 //fonction du nombre total d'articles à l'ouverture de la page
 function totalQuantity() {
   const totalQuantity = document.getElementById("totalQuantity");
   const totalQuantityValue = basketLocalStorage.reduce(function (previous, current) {
-    //element préceent + element courant
+    //element précedent + element courant
     console.log(previous, current);
     if (previous) {
       return previous.selectedQuantity + current.selectedQuantity;
@@ -104,10 +112,17 @@ totalQuantity();
 //fonction du calcul total à l'ouverture de la page
 function totalPrice() {
   const totalPrice = document.getElementById("totalPrice");
-
-
+  const totalPriceValue = basketLocalStorage.reduce(function (previous, current) {
+    console.log(previous, current);
+    if (previous) {
+      return previous.price + current.price;
+    } else {
+      return current.price;
+    }
+  });
+  totalPrice.innerText = totalPriceValue;
 }
-
+totalPrice();
 
 
 //Formulaire...
