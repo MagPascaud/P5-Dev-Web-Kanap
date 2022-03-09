@@ -77,6 +77,7 @@ function onQuantityChange(event) {
 }
 //gérer l'évenement d'ajout de panier
 function onAddToCart(event) {
+    //on ne stocke pas le prix dans le local storage
     const { price, ...productWithoutPrice } = product;
 
     if (!localStorage.getItem("basket")) {
