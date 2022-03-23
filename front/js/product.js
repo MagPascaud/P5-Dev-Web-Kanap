@@ -1,5 +1,4 @@
-console.log('je suis dans le produit');
-//récupéer l'ID présent 
+//Récupérer l'ID présent 
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');
 const colorSelect = document.getElementById("colors");
@@ -8,14 +7,14 @@ const addToCartBtn = document.getElementById("addToCart");
 addToCartBtn.addEventListener("click", onAddToCart);
 let product;
 
+//Appel des fonctions de récupération et d'affichage du produit
 getProduct()
     .then(function (productFromApi) {
         product = productFromApi;
         displayProduct()
+    });
 
-    })
-
-//récupérer le produit sélectionné
+//Fonction pour récupérer le produit sélectionné
 function getProduct() {
     return fetch('http://localhost:3000/api/products/' + productId)
         .then(function (res) {
@@ -30,11 +29,12 @@ function getProduct() {
             return value;
         })
         .catch(function (err) {
-            //Erreur
+            alert("le produit n'a pas pu être chargé");
+
         });
 }
 
-//mettre les infos au bon endroit dans le html
+//Mettre les infos au bon endroit dans le html
 function displayProduct() {
     console.log(product);
 
@@ -64,22 +64,21 @@ function displayProduct() {
     quantity.addEventListener('change', onQuantityChange);
 }
 
-//gérer les évenements de sélection de couleur
+//Gérer les événements de sélection de couleur
 function onColorChange(event) {
     console.log(event.target.value);
     product.selectedColor = event.target.value;
 
 }
-//gérer les évenements de quantité
+//Gérer les événements de quantité
 function onQuantityChange(event) {
     console.log(event.target.value);
     product.selectedQuantity = parseInt(event.target.value);
 }
-//gérer l'évenement d'ajout de panier
+//Gérer l'événement d'ajout de panier
 function onAddToCart(event) {
     //on ne stocke pas le prix dans le local storage
     const { price, ...productWithoutPrice } = product;
-
     if (!localStorage.getItem("basket")) {
         localStorage.setItem("basket", JSON.stringify([]));
     }
@@ -97,7 +96,6 @@ function onAddToCart(event) {
         return
     }
     if (basketLocalStorage.length) {
-        console.log("le tableau est plein");
         let sameProductIndex;
         const sameProduct = basketLocalStorage.find(function (el, i) {
             if (productId === el._id && el.selectedColor === product.selectedColor) {
@@ -114,7 +112,6 @@ function onAddToCart(event) {
             basketLocalStorage[sameProductIndex] = sameProduct;
         }
     } else {
-        console.log("le tableau est vide");
         basketLocalStorage.push(productWithoutPrice);
     }
     localStorage.setItem("basket", JSON.stringify(basketLocalStorage));

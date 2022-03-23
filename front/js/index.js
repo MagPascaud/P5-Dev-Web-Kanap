@@ -1,9 +1,9 @@
-console.log("je suis dans l'accueil");
+//Appel des fonctions de récupération et d'affichage de la liste des produits
 getProducts()
     .then(function (products) {
         displayProducts(products)
-    })
-//ce fichier doit aller chercher la liste de produits depuis le serveur
+    });
+//Ce fichier doit aller chercher la liste de produits depuis le serveur
 function getProducts() {
     return fetch('http://localhost:3000/api/products')
         .then(function (res) {
@@ -18,10 +18,10 @@ function getProducts() {
             return value;
         })
         .catch(function (err) {
-            //Erreur
+            alert("la liste des produits n'a pas pu être chargée");
         });
 }
-//puis afficher les produits dans la section items
+//Afficher les produits dans la section items
 function displayProducts(products) {
     const itemsSection = document.getElementById("items");
     for (const product of products) {
@@ -34,6 +34,5 @@ function displayProducts(products) {
           <p class="productDescription">${product.description}</p>
         </article>`;
         itemsSection.appendChild(link)
-
     }
 }

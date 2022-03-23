@@ -1,5 +1,3 @@
-console.log('je suis dans le panier');
-
 //Récupérer les éléments du panier
 const basketLocalStorage = JSON.parse(localStorage.getItem("basket"));
 
@@ -90,20 +88,26 @@ function displayBasket() {
         const newQuantity = event.target.value;
         console.log(product);
         product.selectedQuantity = Number(newQuantity);
+        const index = basketLocalStorage.findIndex(function (el) {
+          return el._id === product._id;
+        })
+        basketLocalStorage[index].selectedQuantity = product.selectedQuantity;
         totalPrice();
         totalQuantity();
-        // basketLocalStorage.push(newQuantity);
+        localStorage.setItem('basket', JSON.stringify(basketLocalStorage.map(function (el) {
+          const { price, ...productWithoutPrice } = el;
+          return productWithoutPrice;
+        })));
+        // location.reload();
       })
       pDelete.addEventListener('click', function () {
         const index = basketLocalStorage.findIndex(function (el) {
           return el._id === product._id;
-
         })
         basketLocalStorage.splice(index, 1);
         localStorage.setItem('basket', JSON.stringify(basketLocalStorage.map(function (el) {
           const { price, ...productWithoutPrice } = el;
           return productWithoutPrice;
-
         })));
         location.reload();
       })
@@ -115,7 +119,7 @@ function displayBasket() {
 }
 displayBasket()
 
-//fonction du nombre total d'articles à l'ouverture de la page
+//Fonction du nombre total d'articles à l'ouverture de la page
 function totalQuantity() {
   const totalQuantity = document.getElementById("totalQuantity");
   const totalQuantityValue = basketLocalStorage
@@ -123,14 +127,13 @@ function totalQuantity() {
       return el.selectedQuantity;
     })
     .reduce(function (previous, current) {
-      //element précedent + element courant
       return previous + current;
     });
   totalQuantity.innerText = totalQuantityValue;
 
 }
 
-//fonction du calcul total à l'ouverture de la page
+//Fonction du calcul total à l'ouverture de la page
 function totalPrice() {
   const totalPrice = document.getElementById("totalPrice");
   const totalPriceValue = basketLocalStorage
@@ -146,21 +149,21 @@ function totalPrice() {
 //Formulaire
 
 
-//variables de chaque input avec leur id
+//Variables de chaque input avec leur id
 const firstName = document.getElementById("firstName");
 const lastName = document.getElementById("lastName");
 const address = document.getElementById("address");
 const city = document.getElementById("city");
 const email = document.getElementById("email");
 
-//récupération messages d'erreurs
+//Récupération des messages d'erreurs
 const firstNameError = document.getElementById("firstNameErrorMsg");
 const lastNameError = document.getElementById("lastNameErrorMsg");
 const addressError = document.getElementById("addressErrorMsg");
 const cityError = document.getElementById("cityErrorMsg");
 const emailError = document.getElementById("emailErrorMsg");
 
-//variables des RegEx
+//Variables des RegEx
 const nameCityRegex = new RegExp("^[a-zA-Z ,.'-]{2,}$");
 const addressRegex = new RegExp("^[a-zA-Z,0-9 ,.'-]{2,}$")
 const emailRegex = new RegExp("^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,})$")
@@ -187,7 +190,7 @@ firstName.addEventListener('change', function (event) {
   }
 });
 
-//validation du nom
+//Validation du nom
 lastName.addEventListener('change', function (event) {
   event.preventDefault;
   if (lastName.value === "") {
@@ -203,7 +206,7 @@ lastName.addEventListener('change', function (event) {
   }
 });
 
-//validation de l'adresse
+//Validation de l'adresse
 address.addEventListener('change', function (event) {
   event.preventDefault;
   if (address.value === "") {
@@ -218,7 +221,7 @@ address.addEventListener('change', function (event) {
   }
 });
 
-//validation de la ville
+//Validation de la ville
 city.addEventListener('change', function (event) {
   event.preventDefault;
   if (city.value === "") {
@@ -234,7 +237,7 @@ city.addEventListener('change', function (event) {
   }
 });
 
-//validation de l'email
+//Validation de l'email
 email.addEventListener('change', function (event) {
   event.preventDefault;
   if (email.value === "") {
@@ -250,40 +253,46 @@ email.addEventListener('change', function (event) {
   }
 });
 
-//variable du btn commander
-let order = document.getElementById("order");
+//Variable du bouton commander
+let order = document.getElementById("form");
 order.addEventListener('submit', function (event) {
+  event.preventDefault();
   if (firstNameValid && lastNameValid && addressValid && cityValid && emailValid) {
     //si tout est bon faire la commande et renvoie vers page confirmation
-    fetch ('http://localhost:3000/api/order',{
-      method:"POST",
-      body:{
-        contact:{
-          firstName:firstName.value,
-          lastName:lastName.value,
-          address:address.value,
-          city:city.value,
-          email:email.value          
-        },
-        products:basketLocalStorage.map(function(product){
-          return product._id
-        })
+    const body = {
+      contact: {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        address: address.value,
+        city: city.value,
+        email: email.value
       },
-      headers:{
-        "Content-Type":"application/json"
-      }
+      products: basketLocalStorage.map(function (product) {
+        return product._id
+      })
+    }
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
     })
-    .then(function (value) {
-      console.log(value);
-    })
-    .catch(function (err) {
-      console.error(err);
-    });
-    
+      .then(function (res) {
+        if (res.ok) {
+          return res.json();
+        }
+        else {
+          console.log("Erreur")
+        }
+      })
+      .then(function (value) {
+        console.log(value);
+        document.location.href = `./confirmation.html?order=${value.orderId}`;
+      })
+      .catch(function (err) {
+        alert("la commande n'a pu être passée");
+      })
   }
 })
-
-
-
-
-
