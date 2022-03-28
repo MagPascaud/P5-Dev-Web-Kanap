@@ -8,7 +8,7 @@ function getProducts() {
         return res.json();
       }
       else {
-        console.log("Erreur")
+        console.error("Erreur")
       }
     })
     .then(function (value) {
@@ -16,6 +16,7 @@ function getProducts() {
     })
     .catch(function (err) {
       console.error(err);
+      alert("une erreur est survenue");
     });
 }
 //Insérer les éléments au bon endroit
@@ -86,7 +87,6 @@ function displayBasket() {
 
       inputQuantity.addEventListener('change', function (event) {
         const newQuantity = event.target.value;
-        console.log(product);
         product.selectedQuantity = Number(newQuantity);
         const index = basketLocalStorage.findIndex(function (el) {
           return el._id === product._id;
@@ -147,7 +147,6 @@ function totalPrice() {
 }
 
 //Formulaire
-
 
 //Variables de chaque input avec leur id
 const firstName = document.getElementById("firstName");
@@ -233,7 +232,6 @@ city.addEventListener('change', function (event) {
   } else {
     cityError.innerHTML = "";
     cityValid = true;
-
   }
 });
 
@@ -249,7 +247,6 @@ email.addEventListener('change', function (event) {
   } else {
     emailError.innerHTML = "";
     emailValid = true;
-
   }
 });
 
@@ -284,11 +281,11 @@ order.addEventListener('submit', function (event) {
           return res.json();
         }
         else {
-          console.log("Erreur")
+          console.error("Erreur")
         }
       })
       .then(function (value) {
-        console.log(value);
+        localStorage.clear();
         document.location.href = `./confirmation.html?order=${value.orderId}`;
       })
       .catch(function (err) {

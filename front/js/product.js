@@ -1,8 +1,6 @@
 //Récupérer l'ID présent 
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');
-const colorSelect = document.getElementById("colors");
-const quantitySelect = document.getElementById("quantity");
 const addToCartBtn = document.getElementById("addToCart");
 addToCartBtn.addEventListener("click", onAddToCart);
 let product;
@@ -22,7 +20,7 @@ function getProduct() {
                 return res.json();
             }
             else {
-                console.log("Erreur")
+                console.error("Erreur")
             }
         })
         .then(function (value) {
@@ -30,13 +28,11 @@ function getProduct() {
         })
         .catch(function (err) {
             alert("le produit n'a pas pu être chargé");
-
         });
 }
 
 //Mettre les infos au bon endroit dans le html
 function displayProduct() {
-    console.log(product);
 
     const title = document.getElementById("title");
     title.textContent = `${product.name}`;
@@ -58,6 +54,7 @@ function displayProduct() {
         option.value = color;
         colors.appendChild(option);
     }
+
     colors.addEventListener('change', onColorChange);
 
     const quantity = document.getElementById("quantity");
@@ -66,15 +63,14 @@ function displayProduct() {
 
 //Gérer les événements de sélection de couleur
 function onColorChange(event) {
-    console.log(event.target.value);
     product.selectedColor = event.target.value;
-
 }
+
 //Gérer les événements de quantité
 function onQuantityChange(event) {
-    console.log(event.target.value);
     product.selectedQuantity = parseInt(event.target.value);
 }
+
 //Gérer l'événement d'ajout de panier
 function onAddToCart(event) {
     //on ne stocke pas le prix dans le local storage

@@ -11,7 +11,7 @@ function getProducts() {
                 return res.json();
             }
             else {
-                console.log("Erreur")
+                console.error("Erreur")
             }
         })
         .then(function (value) {
@@ -25,7 +25,6 @@ function getProducts() {
 function displayProducts(products) {
     const itemsSection = document.getElementById("items");
     for (const product of products) {
-        console.log(product);
         const link = document.createElement("a");
         link.href = `./product.html?id=${product._id}`;
         link.innerHTML = `<article>
