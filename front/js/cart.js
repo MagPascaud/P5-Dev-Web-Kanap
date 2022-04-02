@@ -98,7 +98,6 @@ function displayBasket() {
           const { price, ...productWithoutPrice } = el;
           return productWithoutPrice;
         })));
-        // location.reload();
       })
       pDelete.addEventListener('click', function () {
         const index = basketLocalStorage.findIndex(function (el) {
@@ -114,7 +113,6 @@ function displayBasket() {
     }
     totalPrice();
     totalQuantity();
-
   })
 }
 displayBasket()
@@ -130,7 +128,6 @@ function totalQuantity() {
       return previous + current;
     });
   totalQuantity.innerText = totalQuantityValue;
-
 }
 
 //Fonction du calcul total à l'ouverture de la page
@@ -173,7 +170,6 @@ let addressValid = false;
 let cityValid = false;
 let emailValid = false;
 
-
 //Validation du prénom
 firstName.addEventListener('change', function (event) {
   event.preventDefault;
@@ -201,7 +197,6 @@ lastName.addEventListener('change', function (event) {
   } else {
     lastNameError.innerHTML = "";
     lastNameValid = true;
-
   }
 });
 
