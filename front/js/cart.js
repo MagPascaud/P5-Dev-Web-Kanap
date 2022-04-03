@@ -91,6 +91,10 @@ function displayBasket() {
         const index = basketLocalStorage.findIndex(function (el) {
           return el._id === product._id;
         })
+        if (product.selectedQuantity < 1 || product.selectedQuantity > 100) {
+          alert("vous devez choisir une quantité entre 1 et 100");
+          return
+      }
         basketLocalStorage[index].selectedQuantity = product.selectedQuantity;
         totalPrice();
         totalQuantity();
