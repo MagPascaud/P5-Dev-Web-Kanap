@@ -91,6 +91,10 @@ function displayBasket() {
         const index = basketLocalStorage.findIndex(function (el) {
           return el._id === product._id;
         })
+        if (product.selectedQuantity < 1 || product.selectedQuantity > 100) {
+          alert("vous devez choisir une quantité entre 1 et 100");
+          return
+      }
         basketLocalStorage[index].selectedQuantity = product.selectedQuantity;
         totalPrice();
         totalQuantity();
@@ -170,86 +174,53 @@ let addressValid = false;
 let cityValid = false;
 let emailValid = false;
 
+//Fonction de validations
+function validateInput(input, regex, errorTag, validInput, errorMessage) {
+  if (regex.test(input.value.trim()) === false) {
+    validInput = false;
+    errorTag.innerHTML = errorMessage;
+  } else {
+    errorTag.innerHTML = "";
+    validInput = true;
+  }
+}
+
 //Validation du prénom
 firstName.addEventListener('change', function (event) {
   event.preventDefault;
-  if (firstName.value === "") {
-    firstNameValid = false;
-    firstNameError.innerHTML = "Vous devez saisir un prénom";
-  } else if (nameCityRegex.test(firstName.value) === false) {
-    firstNameValid = false;
-    firstNameError.innerHTML = "Au moins 2 caractères, lettres uniquement";
-  } else {
-    firstNameError.innerHTML = "";
-    firstNameValid = true;
-  }
+  validateInput(firstName, nameCityRegex, firstNameError, firstNameValid, "Veuillez saisir au moins 2 caractères et des lettres uniquement.")
 });
 
 //Validation du nom
 lastName.addEventListener('change', function (event) {
   event.preventDefault;
-  if (lastName.value === "") {
-    lastNameValid = false;
-    lastNameError.innerHTML = "Vous devez saisir un nom";
-  } else if (nameCityRegex.test(lastName.value) === false) {
-    lastNameValid = false;
-    lastNameError.innerHTML = "Au moins 2 caractères, lettres uniquement";
-  } else {
-    lastNameError.innerHTML = "";
-    lastNameValid = true;
-  }
+  validateInput(lastName, nameCityRegex, lastNameError, lastNameValid, "Veuillez saisir au moins 2 caractères et des lettres uniquement.")
 });
 
 //Validation de l'adresse
 address.addEventListener('change', function (event) {
   event.preventDefault;
-  if (address.value === "") {
-    addressValid = false;
-    addressError.innerHTML = "Vous devez saisir une adresse postale";
-  } else if (addressRegex.test(address.value) === false) {
-    addressValid = false;
-    addressError.innerHTML = "Au moins 2 caractères";
-  } else {
-    addressError.innerHTML = "";
-    addressValid = true;
-  }
+  validateInput(address, addressRegex, addressError, addressValid, "Veuillez saisir au moins 2 caractères, des lettres et des chiffres uniquement.")
 });
 
 //Validation de la ville
 city.addEventListener('change', function (event) {
   event.preventDefault;
-  if (city.value === "") {
-    cityValid = false;
-    cityError.innerHTML = "Vous devez saisir une ville";
-  } else if (nameCityRegex.test(city.value) === false) {
-    cityValid = false;
-    cityError.innerHTML = "Au moins 2 caractères, lettres uniquement";
-  } else {
-    cityError.innerHTML = "";
-    cityValid = true;
-  }
+  validateInput(city, nameCityRegex, cityError, cityValid, "Veuillez saisir au moins 2 caractères et des lettres uniquement.")
 });
 
 //Validation de l'email
 email.addEventListener('change', function (event) {
   event.preventDefault;
-  if (email.value === "") {
-    emailValid = false;
-    emailError.innerHTML = "Vous devez saisir un email";
-  } else if (emailRegex.test(email.value) === false) {
-    emailValid = false;
-    emailError.innerHTML = "cette adresse email n'est pas valide";
-  } else {
-    emailError.innerHTML = "";
-    emailValid = true;
-  }
+  validateInput(email, emailRegex, emailError, emailValid, "Cette adresse email n'est pas valide.")
 });
 
 //Variable du bouton commander
 let order = document.getElementById("form");
 order.addEventListener('submit', function (event) {
   event.preventDefault();
-  if (firstNameValid && lastNameValid && addressValid && cityValid && emailValid) {
+
+  if (validateInput = true) {
     //si tout est bon faire la commande et renvoie vers page confirmation
     const body = {
       contact: {
@@ -280,7 +251,7 @@ order.addEventListener('submit', function (event) {
         }
       })
       .then(function (value) {
-        localStorage.clear();
+        localStorage.removeItem('basketLocalStorage');
         document.location.href = `./confirmation.html?order=${value.orderId}`;
       })
       .catch(function (err) {
